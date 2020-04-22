@@ -86,6 +86,8 @@ macchanger: https://github.com/alobbs/macchanger"""
     circuit_tip = icon.info + color.BOLD + " You can request a new TOR circuit by reconnecting it" + color.END
     torghostng_tip = icon.success + color.BOLD + " You can run TorghostNG with '{}'"
     interface_error = icon.error + " There is no interface named {}. Changing failed"
+    video_tutorials = icon.info + """" If you have any questions, take a look at TorghostNG Tutorial Videos here: """+ color.BOLD +"""https://bit.ly/34TNglL"""+ color.END +"""
+    You will love it, i think :D"""
     
 class Vietnamese(English):
     options = "CÁC LỰA CHỌN"
@@ -154,6 +156,7 @@ macchanger: https://github.com/alobbs/macchanger"""
     circuit_tip = icon.info + color.BOLD + " Bạn có thể chuyển một mạch TOR mới bằng cách kết nối lại" + color.END
     torghostng_tip = icon.success + color.BOLD + " Bạn có thể chạy TorghostNG với lệnh '{}'"
     interface_error = icon.error + " Không có interface nào tên {}. Thay đổi thất bại"
+    video_tutorials = icon.info + " Nếu có thắc mắc gì thì các cậu xem video hướng dẫn nha: "+ color.BOLD +"https://bit.ly/34TNglL"+ color.END
     
 the_banner = color.GREEN + """ _____               _               _   _   _  ____ 
 |_   _|__  _ __ __ _| |__   ___  ___| |_| \ | |/ ___|
