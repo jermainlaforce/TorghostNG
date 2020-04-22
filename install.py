@@ -62,40 +62,31 @@ if path.isfile('/usr/bin/torghostng') == True:
 
 
 if path.isfile('/usr/bin/pacman') == True:
-    UPDATE_REPOSITORY = "sudo pacman -Sy"
     INSTALL_PACKAGES = "sudo pacman -S "
         
 elif path.isfile('/usr/bin/apt') == True:
-    UPDATE_REPOSITORY = "sudo apt update"
     INSTALL_PACKAGES = "sudo apt install "
     
 elif path.isfile('/usr/bin/eopkg') == True:
-    UPDATE_REPOSITORY = "sudo eopkg update-repo"
     INSTALL_PACKAGES = "sudo eopkg install "
         
 elif path.isfile('/usr/bin/dnf') == True:
-    UPDATE_REPOSITORY = "sudo dnf check-update"
     INSTALL_PACKAGES = "sudo dnf install "
         
 elif path.isfile('/usr/bin/yum') == True:
-    UPDATE_REPOSITORY = "sudo yum check-update"
     INSTALL_PACKAGES = "sudo yum install "
         
 elif path.isfile('/usr/bin/zypper') == True:
-    UPDATE_REPOSITORY = "sudo zypper update"
     INSTALL_PACKAGES = "sudo zypper install "
         
 elif path.isfile('/usr/bin/apk') == True:
-    UPDATE_REPOSITORY = "sudo apt update"
     INSTALL_PACKAGES = "sudo apk add --upgrade "
         
 elif path.isfile('/usr/bin/opkg') == True:
-    UPDATE_REPOSITORY = "sudo opkg update"
     INSTALL_PACKAGES = "sudo opkg install "
         
 elif path.isfile('/usr/bin/xbps-install') == True:
-    UPDATE_REPOSITORY = "sudo xbps-install -S "
-    INSTALL_PACKAGES = UPDATE_REPOSITORY
+    INSTALL_PACKAGES = "sudo xbps-install -S "
         
 elif path.isfile('/usr/bin/upgradepkg') == True:
     UPDATE_REPOSITORY = "wget https://slack.conraid.net/repository/slackware64-current/{}"
