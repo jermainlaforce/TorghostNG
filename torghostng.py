@@ -7,13 +7,21 @@ from subprocess import getoutput
 from torngconf.theme import *
 from os import geteuid, system, path, name
 
-SLEEP_TIME = 1.25
+SLEEP_TIME = 1.0
 VERSION = "1.0"
+
 
 if path.isfile('/usr/bin/upgradepkg') == True:
     LANGCONF = 'torngconf/langconf.txt'
 else:
     LANGCONF = '/usr/bin/torngconf/langconf.txt'
+    
+if path.isfile('/usr/bin/apt') == True:
+    TOR_USER = 'debian-tor'
+else:
+    TOR_USER = 'tor'
+
+TOR_UID = getoutput('id -ur {}'.format(TOR_USER))
 
 Torrc = '/etc/tor/torngrc'
 resolv = '/etc/resolv.conf'
@@ -54,7 +62,7 @@ for NET in $NON_TOR 127.0.0.0/8; do
  iptables -A OUTPUT -d $NET -j ACCEPT
 done
 iptables -A OUTPUT -m owner --uid-owner $TOR_UID -j ACCEPT
-iptables -A OUTPUT -j REJECT""".format(getoutput('id -ur tor'))
+iptables -A OUTPUT -j REJECT""".format(TOR_UID)
 
 IpFlush = """iptables -P INPUT ACCEPT
 iptables -P FORWARD ACCEPT
@@ -131,7 +139,7 @@ def the_argparse(language=English):
 def check_tor(status):
     try:
         print(language.checking_tor, end='', flush=True)
-        tor_status = getoutput("curl -s --max-time 10 https://check.torproject.org | grep Congratulations")
+        tor_status = getoutput("curl -s --max-time 20 htps://check.torproject.org | grep Congratulations")
         sleep(SLEEP_TIME)
         print(language.done)
         
@@ -143,7 +151,7 @@ def check_tor(status):
             if status == "failed":
                 print(language.tor_failed)
                 check_ip()
-                try_again()
+                stop_connecting()
                 
             elif status == "stopped":
                 print(language.tor_disconnected)
@@ -295,7 +303,7 @@ def start_connecting(id=None):
         print(language.done)
         
         print(language.starting_tor, end='', flush=True)
-        system('sudo -u tor tor -f {} > /dev/null'.format(Torrc))
+        system('sudo -u {0} tor -f {1} > /dev/null'.format(TOR_USER, Torrc))
         sleep(SLEEP_TIME)
         print(language.done)
         
