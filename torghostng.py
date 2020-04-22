@@ -176,7 +176,7 @@ def check_lang():
                 file_lang.close()
 
                 print(lang.applying_language, end='', flush=True)
-                sleep(0.5)
+                sleep(SLEEP_TIME)
                 print(lang.done)
 
                 return lang
@@ -197,7 +197,7 @@ def check_lang():
 
 def choose_lang(language=English):
     try:
-        with open("torngconf/langconf.txt", mode="w") as file_lang:
+        with open(LANGCONF, mode="w") as file_lang:
             file_lang.truncate(0)
             
             print(language.language_list)
@@ -206,7 +206,7 @@ def choose_lang(language=English):
             if choice == 1:
                 print(English.applying_language, end='', flush=True)
                 file_lang.write("English")
-                sleep(0.5)
+                sleep(SLEEP_TIME)
                 print(English.done)
                 print(English.current_language + "English")
                 return English
@@ -214,7 +214,7 @@ def choose_lang(language=English):
             if choice == 2:
                 print(Vietnamese.applying_language, end='', flush=True)
                 file_lang.write("Vietnamese")
-                sleep(0.5)
+                sleep(SLEEP_TIME)
                 print(Vietnamese.done)
                 print(Vietnamese.current_language + "Vietnamese")
                 return Vietnamese
