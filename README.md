@@ -1,2 +1,2 @@
-# Giới thiệu về TorghostNG
-TorghostNG là một công cụ bạn kết nối Internet ẩn danh qua TOR. TorghostNG Được gõ lại từ TorGhost bằng Python 3
+# About TorghostNG
+TorghostNG is a tool that make all your internet traffic anonymized through TOR proxy.Rewritten from TorGhost with Python 3
