@@ -361,6 +361,9 @@ def changemac(interface):
         exit()
 
 if __name__ == "__main__":
+    if args.nodelay == True:
+        SLEEP_TIME = 0
+
     language = check_lang()
     
     check_windows_check_root()
@@ -369,9 +372,6 @@ if __name__ == "__main__":
 
     banner()
     print()
-    
-    if args.nodelay == True:
-        SLEEP_TIME = 0
 
     if args.list == True:
         print(language.language_list)
