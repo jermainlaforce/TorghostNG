@@ -176,7 +176,7 @@ def check_lang():
                 file_lang.close()
 
                 print(lang.applying_language, end='', flush=True)
-                sleep(SLEEP_TIME)
+                sleep(0.5)
                 print(lang.done)
 
                 return lang
@@ -206,7 +206,7 @@ def choose_lang(language=English):
             if choice == 1:
                 print(English.applying_language, end='', flush=True)
                 file_lang.write("English")
-                sleep(SLEEP_TIME)
+                sleep(0.5)
                 print(English.done)
                 print(English.current_language + "English")
                 return English
@@ -214,7 +214,7 @@ def choose_lang(language=English):
             if choice == 2:
                 print(Vietnamese.applying_language, end='', flush=True)
                 file_lang.write("Vietnamese")
-                sleep(SLEEP_TIME)
+                sleep(0.5)
                 print(Vietnamese.done)
                 print(Vietnamese.current_language + "Vietnamese")
                 return Vietnamese
@@ -361,9 +361,6 @@ def changemac(interface):
         exit()
 
 if __name__ == "__main__":
-    if args.nodelay == True:
-        SLEEP_TIME = 0
-
     language = check_lang()
     
     check_windows_check_root()
@@ -372,6 +369,9 @@ if __name__ == "__main__":
 
     banner()
     print()
+    
+    if args.nodelay == True:
+        SLEEP_TIME = 0
 
     if args.list == True:
         print(language.language_list)
