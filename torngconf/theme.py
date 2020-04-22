@@ -25,7 +25,7 @@ class English:
     installing = icon.process + " Installing {}..."
     uninstalling = icon.process + " Uninstalling TorghostNG..."
     uninstalled = icon.success + " TorghostNG has been uninstalled"
-    installed = icon.success + " {} has been installed"
+    installed = icon.success + " TorghostNG has been installed"
     already_installed = icon.info + " {} is already installed"
     description = """TorghostNG 1.0 - Make all your internet traffic anonymized through TOR proxy
 Rewritten from TorGhost with Python 3"""
@@ -86,7 +86,7 @@ macchanger: https://github.com/alobbs/macchanger"""
     circuit_tip = icon.info + color.BOLD + " You can request a new TOR circuit by reconnecting it" + color.END
     torghostng_tip = icon.success + color.BOLD + " You can run TorghostNG with '{}'"
     interface_error = icon.error + " There is no interface named {}. Changing failed"
-    video_tutorials = icon.info + """" If you have any questions, take a look at TorghostNG Tutorial Videos here: """+ color.BOLD +"""https://bit.ly/34TNglL"""+ color.END +"""
+    video_tutorials = icon.info + """ If you have any questions, take a look at TorghostNG Tutorial Videos here: """+ color.BOLD +"""https://bit.ly/34TNglL"""+ color.END +"""
     You will love it, i think :D"""
     
 class Vietnamese(English):
