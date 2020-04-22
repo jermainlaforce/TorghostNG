@@ -147,7 +147,7 @@ def check_update():
 def check_tor(status):
     try:
         print(language.checking_tor, end='', flush=True)
-        tor_status = getoutput("curl -s --max-time 20 htps://check.torproject.org | grep Congratulations")
+        tor_status = getoutput("curl -s --max-time 20 https://check.torproject.org | grep Congratulations")
         sleep(SLEEP_TIME)
         print(language.done)
         
@@ -270,8 +270,6 @@ def start_connecting(id=None):
     try:
         print(language.connecting_tor)
         
-        system("cp /etc/resolv.conf /etc/resolv.conf.backup")
-        
         if id != None:
             torrconfig = TorrcConfig_exitnode %(id)
             print(language.id_tip)
@@ -296,6 +294,8 @@ def start_connecting(id=None):
             print(language.resolv_already_configured)
             
         else:
+            system("cp /etc/resolv.conf /etc/resolv.conf.backup")
+
             with open(resolv, mode='w') as file_resolv:
                 print(language.configuring_resolv, end='', flush=True)
                 file_resolv.write(resolvConfig)
@@ -321,10 +321,11 @@ def start_connecting(id=None):
         sleep(SLEEP_TIME)
         print(language.done)
         
+        print(language.dns_tip)
+        
         check_tor('failed')
         
         print(language.circuit_tip)
-        print(language.dns_tip)
 
     except KeyboardInterrupt:
         print()
@@ -348,10 +349,10 @@ def stop_connecting():
         system('systemctl restart --now NetworkManager')
         sleep(7)
         print(language.done)
-        
-        check_tor('stopped')
 
         print(language.dns_tip)
+
+        check_tor('stopped')
 
     except KeyboardInterrupt:
         print()
