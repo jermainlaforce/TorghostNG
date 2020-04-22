@@ -52,6 +52,7 @@ macchanger: https://github.com/alobbs/macchanger"""
     language_help = "Change the display language. English is the default"
     language_list_help = "Show the available languages list"
     checkip_help = "Check your current IP address"
+    dns_help = "Use this to fix DNS when website address can't be resolved"
     done = color.GREEN+ " Done"+color.END
     iptables_info = icon.info + """ Non-TOR traffic will be blocked by iptables
     Some apps may not be able to connect to the Internet"""
@@ -72,6 +73,7 @@ macchanger: https://github.com/alobbs/macchanger"""
     setting_iptables = icon.process + " Setting up iptables rules..."
     flushing_iptables = icon.process + " Flushing iptables, resetting to default..."
     checking_ip = icon.process + " Checking your current IP..."
+    fixing_dns = icon.process + " Fixing your DNS problem..."
     your_ip = icon.info + " Your current IP address: "
     checking_tor = icon.process + " Checking TOR connection..."
     tor_success = icon.success + " Congratulations! You've been connecting to TOR"
@@ -84,7 +86,8 @@ macchanger: https://github.com/alobbs/macchanger"""
     ifconfig_tip = icon.info + color.BOLD + " You can use 'ifconfig' to show interface devices" + color.END
     id_tip = icon.info + color.BOLD + " You can go to https://CountryCode.org to search country id" + color.END
     circuit_tip = icon.info + color.BOLD + " You can request a new TOR circuit by reconnecting it" + color.END
-    torghostng_tip = icon.success + color.BOLD + " You can run TorghostNG with '{}'"
+    torghostng_tip = icon.info + color.BOLD + " You can run TorghostNG with '{}'"
+    dns_tip = icon.info + " If you have problem with resolving website address, use '--dns' to fix it"
     interface_error = icon.error + " There is no interface named {}. Changing failed"
     video_tutorials = icon.info + """ If you have any questions, take a look at TorghostNG Tutorial Videos here: """+ color.BOLD +"""https://bit.ly/34TNglL"""+ color.END +"""
     You will love it, i think :D"""
@@ -122,6 +125,7 @@ macchanger: https://github.com/alobbs/macchanger"""
     language_help = "Thay đổi ngôn ngữ hiển thị. Tiếng Anh là mặc định"
     language_list_help = "Hiển thị danh sách các ngôn ngữ hiện có"
     checkip_help = "Xem địa chỉ IP hiện tại"
+    dns_help = "Dùng cái này để sửa vấn đề về DNS"
     done = color.GREEN+ " Đã xong"+color.END
     iptables_info = icon.info + """ iptables sẽ chặn các kết nối không đi qua TOR
     Ứng dụng nào thích chơi kết nối một mình một kiểu sẽ bị chặn"""
@@ -142,6 +146,7 @@ macchanger: https://github.com/alobbs/macchanger"""
     setting_iptables = icon.process + " Đang thiết lập quy tắc cho iptables..."
     flushing_iptables = icon.process + " Đang thiết lập lại iptables về như cũ..."
     checking_ip = icon.process + " Đang kiểm tra địa chỉ IP hiện tại..."
+    fixing_dns = icon.process + " Đang sửa vấn đề DNS..."
     your_ip = icon.info + " Địa chỉ IP hiện tại: "
     checking_tor = icon.process + " Đang kiểm tra kết nối đến mạng TOR..."
     tor_success = icon.success + " Đã kết nối đến mạng TOR"
@@ -155,6 +160,7 @@ macchanger: https://github.com/alobbs/macchanger"""
     id_tip = icon.info + color.BOLD + " Bạn có thể vô https://CountryCode.org để tìm ID của từng quốc gia" + color.END
     circuit_tip = icon.info + color.BOLD + " Bạn có thể chuyển một mạch TOR mới bằng cách kết nối lại" + color.END
     torghostng_tip = icon.success + color.BOLD + " Bạn có thể chạy TorghostNG với lệnh '{}'"
+    dns_tip = icon.info + " Nếu bạn gặp vấn đề với việc phân giải địa chỉ web, dùng '--dns' để sửa"
     interface_error = icon.error + " Không có interface nào tên {}. Thay đổi thất bại"
     video_tutorials = icon.info + " Nếu có thắc mắc gì thì các cậu xem video hướng dẫn nha: "+ color.BOLD +"https://bit.ly/34TNglL"+ color.END
     
