@@ -79,7 +79,7 @@ def check_windows_check_root():
 def check_update():
     try:
         print(language.checking_update, end='', flush=True)
-        version = getoutput('curl -s --max-time 10 https://raw.githubusercontent.com/gitkern3l/TorghostNG/master/torngconf/Version')
+        version = getoutput('curl -s --max-time 10 https://raw.githubusercontent.com/GitHackTools/TorghostNG/master/torngconf/Version')
         sleep(SLEEP_TIME)
         print(language.done)
 
