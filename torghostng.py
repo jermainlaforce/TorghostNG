@@ -11,17 +11,47 @@ SLEEP_TIME = 1.0
 VERSION = "1.0"
 
 
+def the_argparse(language=English):
+        parser = argparse.ArgumentParser(usage="torghostng [-h] -s|-x|-id|-m|-c|-l|--list", add_help=False)
+        parser._optionals.title = language.options
+        parser.add_argument("-h","--help", help=language.help_help, action="help", default=argparse.SUPPRESS)
+        parser.add_argument("-s","--start", help=language.start_help, action="store_true")
+        parser.add_argument("-x", "--stop", help=language.stop_help, action="store_true")
+        parser.add_argument("-id", help=language.id_help, metavar=language.country_id, type=str)
+        parser.add_argument("-mac", help=language.changemac_help, metavar="INTERFACE", type=str)
+        parser.add_argument("-c","--checkip", help=language.checkip_help, action="store_true")
+        parser.add_argument("--nodelay", help=language.no_delay_help, action="store_true")
+        parser.add_argument("-l","--language", help=language.language_help, action="store_true")
+        parser.add_argument("--list", help=language.language_list_help, action="store_true")
+        parser.add_argument("-u", "--update", help=language.update_help, action="store_true")
+        parser.add_argument("--dns", help=language.dns_help, action="store_true")
+
+        if len(argv) == 1:
+            banner()
+            parser.print_help()
+            exit()
+
+        return parser.parse_args()
+
+
 if path.isfile('/usr/bin/upgradepkg') == True:
     LANGCONF = 'torngconf/langconf.txt'
 else:
     LANGCONF = '/usr/bin/torngconf/langconf.txt'
-    
+
+
 if path.isfile('/usr/bin/apt') == True:
     TOR_USER = 'debian-tor'
 else:
     TOR_USER = 'tor'
 
+
 TOR_UID = getoutput('id -ur {}'.format(TOR_USER))
+
+FIX_DNS = """nameserver 8.8.8.8
+nameserver 8.8.4.4
+nameserver 2001:4860:4860::8888
+nameserver 2001:4860:4860::8844"""
 
 Torrc = '/etc/tor/torngrc'
 resolv = '/etc/resolv.conf'
@@ -112,28 +142,6 @@ def check_update():
     except KeyboardInterrupt:
         print()
         exit()
-
-
-def the_argparse(language=English):
-        parser = argparse.ArgumentParser(usage="torghostng [-h] -s|-x|-id|-m|-c|-l|--list", add_help=False)
-        parser._optionals.title = language.options
-        parser.add_argument("-h","--help", help=language.help_help, action="help", default=argparse.SUPPRESS)
-        parser.add_argument("-s","--start", help=language.start_help, action="store_true")
-        parser.add_argument("-x", "--stop", help=language.stop_help, action="store_true")
-        parser.add_argument("-id", help=language.id_help, metavar=language.country_id, type=str)
-        parser.add_argument("-mac", help=language.changemac_help, metavar="INTERFACE", type=str)
-        parser.add_argument("-c","--checkip", help=language.checkip_help, action="store_true")
-        parser.add_argument("--nodelay", help=language.no_delay_help, action="store_true")
-        parser.add_argument("-l","--language", help=language.language_help, action="store_true")
-        parser.add_argument("--list", help=language.language_list_help, action="store_true")
-        parser.add_argument("-u", "--update", help=language.update_help, action="store_true")
-
-        if len(argv) == 1:
-            banner()
-            parser.print_help()
-            exit()
-
-        return parser.parse_args()
                 
 
 def check_tor(status):
@@ -316,6 +324,7 @@ def start_connecting(id=None):
         check_tor('failed')
         
         print(language.circuit_tip)
+        print(language.dns_tip)
 
     except KeyboardInterrupt:
         print()
@@ -341,6 +350,8 @@ def stop_connecting():
         print(language.done)
         
         check_tor('stopped')
+
+        print(language.dns_tip)
 
     except KeyboardInterrupt:
         print()
@@ -368,6 +379,23 @@ def changemac(interface):
         print()
         exit()
 
+
+def fix_dns():
+    try:
+        print(language.fixing_dns, end='', flush=True)
+        
+        with open(resolv, mode='w') as file:
+            file.write(FIX_DNS)
+            file.close()
+            
+        sleep(SLEEP_TIME)
+        print(language.done)
+        print(language.video_tutorials)
+        
+    except KeyboardInterrupt:
+        print()
+        exit()
+
 if __name__ == "__main__":
     language = check_lang()
     
@@ -389,6 +417,9 @@ if __name__ == "__main__":
         
     if args.update == True:
         check_update()
+
+    if args.dns == True:
+        fix_dns()
         
     if args.checkip == True:
         check_tor('stopped')
