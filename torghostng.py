@@ -10,6 +10,11 @@ from os import geteuid, system, path, name
 SLEEP_TIME = 1.25
 VERSION = "1.0"
 
+if path.isfile('/usr/bin/upgradepkg') == True:
+    LANGCONF = 'torngconf/langconf.txt'
+else:
+    LANGCONF = '/usr/bin/torngconf/langconf.txt'
+
 Torrc = '/etc/tor/torngrc'
 resolv = '/etc/resolv.conf'
 
@@ -79,7 +84,7 @@ def check_windows_check_root():
 def check_update():
     try:
         print(language.checking_update, end='', flush=True)
-        version = getoutput('curl -s --max-time 10 https://raw.githubusercontent.com/GitHackTools/TorghostNG/master/torngconf/Version')
+        version = getoutput('curl -s --max-time 10 https://raw.githubusercontent.com/gitkern3l/TorghostNG/master/torngconf/Version')
         sleep(SLEEP_TIME)
         print(language.done)
 
@@ -164,18 +169,19 @@ def check_ip():
 
 def check_lang():
     try:
-        if path.isfile("torngconf/langconf.txt") == True:
-            with open("torngconf/langconf.txt") as file_lang:
+        if path.isfile(LANGCONF) == True:
+            with open(LANGCONF) as file_lang:
                 lang = eval(file_lang.readline())
 
                 file_lang.close()
 
+                print(lang.applying_language, end='', flush=True)
+                sleep(SLEEP_TIME)
+                print(lang.done)
+
                 return lang
         else:
-            print(language.applying_language, end='', flush=True)
             lang = choose_lang()
-            sleep(SLEEP_TIME)
-            print(lang.done)
             return lang
         
     except KeyboardInterrupt:
@@ -355,9 +361,9 @@ def changemac(interface):
         exit()
 
 if __name__ == "__main__":
-    check_windows_check_root()
-
     language = check_lang()
+    
+    check_windows_check_root()
     
     args = the_argparse(language)
 
@@ -399,7 +405,3 @@ if __name__ == "__main__":
         start_connecting(the_id)
         print(language.video_tutorials)
         exit()
-
-
-print(language.video_tutorials)
-exit()
