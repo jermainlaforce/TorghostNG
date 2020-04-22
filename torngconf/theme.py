@@ -24,7 +24,7 @@ class English:
     downloading = icon.process + "Downloading {}..."
     installing = icon.process + " Installing {}..."
     uninstalling = icon.process + " Uninstalling TorghostNG..."
-    uninstalled = icon.success + " {} has been uninstalled"
+    uninstalled = icon.success + " TorghostNG has been uninstalled"
     installed = icon.success + " {} has been installed"
     already_installed = icon.info + " {} is already installed"
     description = """TorghostNG 1.0 - Make all your internet traffic anonymized through TOR proxy
