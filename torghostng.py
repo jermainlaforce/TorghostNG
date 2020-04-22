@@ -387,12 +387,19 @@ if __name__ == "__main__":
 
     if args.start == True:
         start_connecting()
+        print(language.video_tutorials)
         exit()
 
     if args.stop == True:
         stop_connecting()
+        print(language.video_tutorials)
         exit()
 
     if the_id:
         start_connecting(the_id)
+        print(language.video_tutorials)
         exit()
+
+
+print(language.video_tutorials)
+exit()
