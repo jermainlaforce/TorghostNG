@@ -176,7 +176,7 @@ def install_package(package):
                 
             else:
                 if package == 'pip3':
-                    package == 'python3-pip'
+                    package = 'python3-pip'
 
                 system(INSTALL_PACKAGES + package)
 
