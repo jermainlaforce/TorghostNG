@@ -71,6 +71,7 @@ It's recommended that you should use [NoScript](https://noscript.net) before bef
 * **Don't torrent over Tor.** If you want to keep anonymous while torrenting, use a no-logs VPN please.
 
 [Bittorrent over Tor isn't a good idea](https://blog.torproject.org/bittorrent-over-tor-isnt-good-idea)
+
 [Not anonymous: attack reveals BitTorrent users on Tor network](https://arstechnica.com/tech-policy/2011/04/not-anonymous-attack-reveals-bittorrent-users-on-tor-network)
 
 ![Don't torrent over Tor, please](https://github.com/GitHackTools/Store-the-pictures/raw/master/Don't%20torrent%20over%20Tor.png)
