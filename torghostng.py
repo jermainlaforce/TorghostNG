@@ -8,7 +8,7 @@ from torngconf.theme import *
 from os import geteuid, system, path, name
 
 SLEEP_TIME = 1.0
-VERSION = "1.0"
+VERSION = "1.1"
 
 
 def the_argparse(language=English):
@@ -36,13 +36,8 @@ def the_argparse(language=English):
 
 if path.isfile('/usr/bin/upgradepkg') == True:
     LANGCONF = 'torngconf/langconf.txt'
-    update_commands = """sudo git pull"""
 else:
     LANGCONF = '/usr/bin/torngconf/langconf.txt'
-    update_commands = """cd ~
-sudo git clone https://github.com/gitkern3l/TorghostNG
-cd TorghostNG
-sudo python3 install.py && sudo python3 install.py"""
 
 
 if path.isfile('/usr/bin/apt') == True:
@@ -50,6 +45,9 @@ if path.isfile('/usr/bin/apt') == True:
 else:
     TOR_USER = 'tor'
 
+Torrc = '/etc/tor/torngrc'
+resolv = '/etc/resolv.conf'
+Sysctl = '/etc/sysctl.conf'
 
 TOR_UID = getoutput('id -ur {}'.format(TOR_USER))
 
@@ -58,8 +56,8 @@ nameserver 8.8.4.4
 nameserver 2001:4860:4860::8888
 nameserver 2001:4860:4860::8844"""
 
-Torrc = '/etc/tor/torngrc'
-resolv = '/etc/resolv.conf'
+DISABLE_IPv6 = """net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1"""
 
 resolvConfig = 'nameserver 127.0.0.1'
 
@@ -97,7 +95,16 @@ for NET in $NON_TOR 127.0.0.0/8; do
  iptables -A OUTPUT -d $NET -j ACCEPT
 done
 iptables -A OUTPUT -m owner --uid-owner $TOR_UID -j ACCEPT
-iptables -A OUTPUT -j REJECT""".format(TOR_UID)
+iptables -A OUTPUT -j REJECT
+
+iptables -A FORWARD -m string --string "BitTorrent" --algo bm --to 65535 -j DROP
+iptables -A FORWARD -m string --string "BitTorrent protocol" --algo bm --to 65535 -j DROP
+iptables -A FORWARD -m string --string "peer_id=" --algo bm --to 65535 -j DROP
+iptables -A FORWARD -m string --string ".torrent" --algo bm --to 65535 -j DROP
+iptables -A FORWARD -m string --string "announce.php?passkey=" --algo bm --to 65535 -j DROP
+iptables -A FORWARD -m string --string "torrent" --algo bm --to 65535 -j DROP
+iptables -A FORWARD -m string --string "announce" --algo bm --to 65535 -j DROP
+iptables -A FORWARD -m string --string "info_hash" --algo bm --to 65535 -j DROP""".format(TOR_UID)
 
 IpFlush = """iptables -P INPUT ACCEPT
 iptables -P FORWARD ACCEPT
@@ -127,7 +134,7 @@ def check_windows_check_root():
 def check_update():
     try:
         print(language.checking_update, end='', flush=True)
-        version = getoutput('curl -s --max-time 10 https://raw.githubusercontent.com/gitkern3l/TorghostNG/master/torngconf/Version')
+        version = getoutput('curl -s --max-time 60 https://raw.githubusercontent.com/gitkern3l/TorghostNG/master/torngconf/Version')
         sleep(SLEEP_TIME)
         print(language.done)
 
@@ -153,7 +160,7 @@ def check_tor(status):
     try:
         print(language.checking_tor, end='', flush=True)
         sleep(5)
-        tor_status = getoutput("curl -s --max-time 20 https://check.torproject.org | grep Congratulations")
+        tor_status = getoutput("curl -s --max-time 60 https://check.torproject.org | grep Congratulations")
         sleep(SLEEP_TIME)
         print(language.done)
         
@@ -179,10 +186,15 @@ def check_tor(status):
 def check_ip():
     try:
         print(language.checking_ip, end='', flush=True)
-        ip_address = getoutput('curl -s --max-time 10 https://fathomless-tor-66488.herokuapp.com/ip')
+        ipv4_address = getoutput('curl -s --max-time 60 https://api.ipify.org')
+        ipv6_address = getoutput('curl -s --max-time 60 https://api6.ipify.org')
         sleep(SLEEP_TIME)
         print(language.done)
-        print(language.your_ip + color.BOLD + ip_address + color.END)
+        
+        print(language.your_ip.format('IPv4') + color.BOLD + ipv4_address + color.END)
+        
+        if ipv6_address != ipv4_address:
+            print(language.your_ip.format('IPv6') + color.BOLD + ipv6_address + color.END)
 
     except KeyboardInterrupt:
         print()
@@ -276,6 +288,26 @@ def start_connecting(id=None):
     try:
         print(language.connecting_tor)
         
+        if DISABLE_IPv6 == open(Sysctl).read():
+            print(language.ipv6_alreay_disabled)
+            getoutput('sudo sysctl -p')
+            
+        else:
+            print(language.disable_ipv6_info)
+
+            system('sudo cp /etc/sysctl.conf /etc/sysctl.conf.backup')
+            print(language.disabling_ipv6, end='', flush=True)
+            
+            with open(Sysctl, mode='w') as file_sysctl:
+                file_sysctl.write(DISABLE_IPv6)
+                file_sysctl.close()
+                
+            getoutput('sudo sysctl -p')
+
+            sleep(SLEEP_TIME)
+            print(language.done)
+
+
         if id != None:
             torrconfig = TorrcConfig_exitnode %(id)
             print(language.id_tip)
@@ -283,27 +315,30 @@ def start_connecting(id=None):
             torrconfig = TorrcConfig
         
         sleep(SLEEP_TIME)
+            
         
         if (path.isfile(Torrc)) and (torrconfig == open(Torrc).read()):
-            print(language.torrc_already_configured)
+            print(language.already_configured.format('TorghostNG Torrc'))
             
         else:
+            print(language.configuring.format('TorghostNG Torrc'), end='', flush=True)
+
             with open(Torrc, mode='w') as file_torrc:
-                print(language.configuring_torrc, end='', flush=True)
                 file_torrc.write(torrconfig)
-                sleep(SLEEP_TIME)
-                print(language.done)
                 file_torrc.close()
+                
+            sleep(SLEEP_TIME)
+            print(language.done)
 
 
         if resolvConfig in open(resolv).read():
-            print(language.resolv_already_configured)
+            print(language.already_configured.format('DNS resolv.conf'))
             
         else:
             system("cp /etc/resolv.conf /etc/resolv.conf.backup")
 
             with open(resolv, mode='w') as file_resolv:
-                print(language.configuring_resolv, end='', flush=True)
+                print(language.configuring.format('DNS resolv.conf'), end='', flush=True)
                 file_resolv.write(resolvConfig)
                 sleep(SLEEP_TIME)
                 print(language.done)
@@ -322,16 +357,15 @@ def start_connecting(id=None):
         print(language.done)
         
         print(language.iptables_info)
+        print(language.block_bittorrent)
         print(language.setting_iptables, end='', flush=True)
         system(iptables_rules)
         sleep(SLEEP_TIME)
         print(language.done)
         
-        print(language.dns_tip)
-        
         check_tor('failed')
         
-        print(language.circuit_tip)
+        print(language.dns_tip)
 
     except KeyboardInterrupt:
         print()
@@ -342,9 +376,25 @@ def stop_connecting():
     try:
         print(language.disconnecting_tor)
 
-        system('mv /etc/resolv.conf.backup /etc/resolv.conf')
-        sleep(SLEEP_TIME)
-        
+
+        if path.isfile('/etc/resolv.conf.backup') == True:
+            print(language.restoring_configuration.format('DNS resolv.conf'), end='', flush=True)
+
+            system('mv /etc/resolv.conf.backup /etc/resolv.conf')
+
+            sleep(SLEEP_TIME)
+            print(language.done)
+            
+        if path.isfile('/etc/sysctl.conf.backup') == True:
+            print(language.restoring_configuration.format('IPv6'), end='', flush=True)
+
+            system('mv /etc/sysctl.conf.backup /etc/sysctl.conf')
+            system('sudo sysctl -p')
+
+            sleep(SLEEP_TIME)
+            print(language.done)
+
+
         print(language.flushing_iptables, end='', flush=True)
         system(IpFlush)
         system('fuser -k 9051/tcp > /dev/null 2>&1')
@@ -355,10 +405,10 @@ def stop_connecting():
         system('systemctl restart --now NetworkManager')
         sleep(7)
         print(language.done)
+        
+        check_tor('stopped')
 
         print(language.dns_tip)
-
-        check_tor('stopped')
 
     except KeyboardInterrupt:
         print()
