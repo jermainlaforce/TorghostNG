@@ -1,5 +1,5 @@
 # About TorghostNG
-TorghostNG is a tool that make all your internet traffic anonymized through Tor proxy.
+TorghostNG is a tool that make all your internet traffic anonymized through Tor network.
 
 Rewritten from [TorGhost](https://github.com/SusmithKrishnan/torghost) with Python 3.
 
