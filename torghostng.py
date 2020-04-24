@@ -41,7 +41,8 @@ else:
     LANGCONF = '/usr/bin/torngconf/langconf.txt'
     update_commands = """cd ~
 sudo git clone https://github.com/gitkern3l/TorghostNG
-cd TorghostNG && sudo python3 install.py"""
+cd TorghostNG
+sudo python3 install.py && sudo python3 install.py"""
 
 
 if path.isfile('/usr/bin/apt') == True:
