@@ -36,8 +36,12 @@ def the_argparse(language=English):
 
 if path.isfile('/usr/bin/upgradepkg') == True:
     LANGCONF = 'torngconf/langconf.txt'
+    update_commands = """sudo git pull"""
 else:
     LANGCONF = '/usr/bin/torngconf/langconf.txt'
+    update_commands = """cd ~
+sudo git clone https://github.com/gitkern3l/TorghostNG
+cd TorghostNG && sudo python3 install.py"""
 
 
 if path.isfile('/usr/bin/apt') == True:
