@@ -147,6 +147,7 @@ def check_update():
 def check_tor(status):
     try:
         print(language.checking_tor, end='', flush=True)
+        sleep(5)
         tor_status = getoutput("curl -s --max-time 20 https://check.torproject.org | grep Congratulations")
         sleep(SLEEP_TIME)
         print(language.done)
