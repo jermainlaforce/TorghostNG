@@ -85,6 +85,7 @@ It's recommended that you should use [NoScript](https://noscript.net) before bef
 
 # Changes log
 Version 1.1
+* Check your IPv6
 * Block BitTorrent traffic
 * Auto disable IPv6 before connecting to Tor
 
