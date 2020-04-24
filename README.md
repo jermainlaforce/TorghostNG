@@ -102,5 +102,11 @@ It's recommended that you should use [NoScript](https://noscript.net) before bef
 * Github: here 😃
 * Website: [Blogspot](https://githacktools.blogspot.com)
 
+# To-do lists
+* Block torrent, for you - Tor network
+* IPv6 (maybe?)
+* GUI version
+* Fix bug, improve TorghostNG (always)
+
 # And finally
 You can help me by telling me if you find any bugs or issues. Thank you for using my tool 😊
