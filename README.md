@@ -57,6 +57,9 @@ If you have any questions, you can watch this [tutorial videos](https://bit.ly/3
 
 I hope you will love it 😃
 
+# How to update TorghostNG
+Open Terminal and type `torghostng -u` with sudo to update TorghostNG, but i will download new TorghostNG to `/root`, because you run it as root. If you don't like that, you can type `git pull -f` and `sudo python3 install.py`.
+
 # Notes before you use Tor
 Tor can't help you completely anonymous, just almost:
 * [Tor’s Biggest Threat – Correlation Attack](https://theonionweb.com/2016/10/25/tors-biggest-threat-correlation-attack)
