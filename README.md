@@ -8,6 +8,10 @@ TorghostNG was tested on:
 * Manjaro
 * ...
 
+# Before you use TorghostNG
+* For the goodness of Tor network, BitTorrent traffic will be blocked by iptables. Although you can bypass it with some tweaks with your torrent client 😥. It's difficult to completely block all torrent traffic.
+* For security reason, TorghostNG is gonna disable IPv6 to prevent IPv6 leaks (it happened to me lmao).
+
 # Installing TorghostNG
 TorghostNG currently supports:
 * GNU/Linux distros that based on Arch Linux
@@ -79,7 +83,12 @@ It's recommended that you should use [NoScript](https://noscript.net) before bef
 
 ![Don't torrent over Tor, please](https://github.com/GitHackTools/Store-the-pictures/raw/master/Don't%20torrent%20over%20Tor.png)
 
-# Screenshots of Torghost
+# Changes log
+Version 1.1
+* Block BitTorrent traffic
+* Auto disable IPv6 before connecting to Tor
+
+# Screenshots of Torghost (Version 1.0)
 * Changing MAC address: `torghostng -m INTERFACE`
 
 ![Changing MAC address with TorghostNG](https://github.com/GitHackTools/Store-the-pictures/raw/master/TorghostNG%20changing%20MAC%20address.png)
