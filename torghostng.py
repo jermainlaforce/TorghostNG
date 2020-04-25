@@ -13,7 +13,7 @@ VERSION = "1.2"
 
 
 def the_argparse(language=English):
-        parser = argparse.ArgumentParser(usage="torghostng [-h] -s|-x!|-id|-r|-m|-c|-l|--list", add_help=False)
+        parser = argparse.ArgumentParser(usage="torghostng [-h] -s|-x|-id|-r|-m|-c|-l|--list", add_help=False)
         parser._optionals.title = language.options
         parser.add_argument("-h","--help", help=language.help_help, action="help", default=argparse.SUPPRESS)
         parser.add_argument("-s","--start", help=language.start_help, action="store_true")
