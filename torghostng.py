@@ -2,6 +2,7 @@
 
 import argparse
 from time import sleep
+from json import loads
 from sys import argv, exit
 from subprocess import getoutput
 from torngconf.theme import *
@@ -17,14 +18,16 @@ def the_argparse(language=English):
         parser.add_argument("-h","--help", help=language.help_help, action="help", default=argparse.SUPPRESS)
         parser.add_argument("-s","--start", help=language.start_help, action="store_true")
         parser.add_argument("-x", "--stop", help=language.stop_help, action="store_true")
+        parser.add_argument("-r", "--renew", help=language.circuit_help, action="store_true")
         parser.add_argument("-id", help=language.id_help, metavar=language.country_id, type=str)
         parser.add_argument("-mac", help=language.changemac_help, metavar="INTERFACE", type=str)
         parser.add_argument("-c","--checkip", help=language.checkip_help, action="store_true")
-        parser.add_argument("--nodelay", help=language.no_delay_help, action="store_true")
+        parser.add_argument("--dns", help=language.dns_help, action="store_true")
         parser.add_argument("-l","--language", help=language.language_help, action="store_true")
         parser.add_argument("--list", help=language.language_list_help, action="store_true")
         parser.add_argument("-u", "--update", help=language.update_help, action="store_true")
-        parser.add_argument("--dns", help=language.dns_help, action="store_true")
+        parser.add_argument("--nodelay", help=language.no_delay_help, action="store_true")
+
 
         if len(argv) == 1:
             banner()
@@ -159,24 +162,22 @@ def check_update():
 def check_tor(status):
     try:
         print(language.checking_tor, end='', flush=True)
-        sleep(5)
-        tor_status = getoutput("curl -s --max-time 60 https://check.torproject.org | grep Congratulations")
+        tor_status = loads(getoutput("curl -s --max-time 60 https://check.torproject.org/api/ip"))
         sleep(SLEEP_TIME)
         print(language.done)
         
-        if 'Congratulations' in tor_status:
-            print(language.tor_success)
-            check_ip()
-            
-        else:
+        if tor_status['IsTor'] == False:
             if status == "failed":
                 print(language.tor_failed)
-                check_ip()
                 stop_connecting()
                 
             elif status == "stopped":
                 print(language.tor_disconnected)
-                check_ip()
+            
+        else:
+            print(language.tor_success)
+
+        check_ip()
 
     except KeyboardInterrupt:
         print()
@@ -225,7 +226,8 @@ def check_lang():
         lang = choose_lang()
         return lang
     except FileNotFoundError:
-       choose_lang()
+        print("TorghostNG is lacking its needed files. Reinstall TorghostNG pls")
+        exit()
 
 
 def choose_lang(language=English):
@@ -263,29 +265,9 @@ def choose_lang(language=English):
         exit()
 
 
-def try_again():
-    try:
-        choice = str(input(language.try_again))
-            
-        if choice[0].upper() =="Y":
-            system('clear')
-            sleep(SLEEP_TIME)
-            start_connecting()
-                
-        elif choice[0].upper() =="N":
-            exit()
-            
-        else:
-            print(language.invalid_choice)
-        
-    except KeyboardInterrupt:
-        print()
-        exit()
-
-
 def start_connecting(id=None):
     try:
-        print(language.connecting_tor)
+        print(icon.process + ' ' + language.start_help)
         
         if DISABLE_IPv6 == open(Sysctl).read():
             print(language.ipv6_alreay_disabled)
@@ -312,8 +294,6 @@ def start_connecting(id=None):
             print(language.id_tip)
         else:
             torrconfig = TorrcConfig
-        
-        sleep(SLEEP_TIME)
             
         
         if (path.isfile(Torrc)) and (torrconfig == open(Torrc).read()):
@@ -357,6 +337,7 @@ def start_connecting(id=None):
         
         print(language.iptables_info)
         print(language.block_bittorrent)
+
         print(language.setting_iptables, end='', flush=True)
         system(iptables_rules)
         sleep(SLEEP_TIME)
@@ -373,7 +354,7 @@ def start_connecting(id=None):
 
 def stop_connecting():
     try:
-        print(language.disconnecting_tor)
+        print(icon.process + ' ' + language.stop_help)
 
 
         if path.isfile('/etc/resolv.conf.backup') == True:
@@ -402,13 +383,34 @@ def stop_connecting():
         
         print(language.restarting_network, end='', flush=True)
         system('systemctl restart --now NetworkManager')
-        sleep(7)
+        sleep(7.5)
         print(language.done)
         
         check_tor('stopped')
 
         print(language.dns_tip)
 
+    except KeyboardInterrupt:
+        print()
+        exit()
+
+
+def change_tor_circuit():
+    try:
+        print(language.changing_tor_circuit, end='', flush=True)
+
+        tor_status = loads(getoutput("curl -s --max-time 60 https://check.torproject.org/api/ip"))
+        
+        if tor_status['IsTor'] == True:
+            system('pidof tor | xargs sudo kill -HUP')
+            sleep(SLEEP_TIME)
+            print(language.done)
+            check_tor('stopped')
+            
+        else:
+            print()
+            start_connecting()
+            
     except KeyboardInterrupt:
         print()
         exit()
@@ -446,7 +448,6 @@ def fix_dns():
             
         sleep(SLEEP_TIME)
         print(language.done)
-        print(language.video_tutorials)
         
     except KeyboardInterrupt:
         print()
@@ -484,19 +485,20 @@ if __name__ == "__main__":
     if your_interface != None:
         changemac(your_interface)
 
-    the_id = args.id
-
     if args.start == True:
         start_connecting()
-        print(language.video_tutorials)
         exit()
 
     if args.stop == True:
         stop_connecting()
-        print(language.video_tutorials)
         exit()
-
+        
+    the_id = args.id
     if the_id:
         start_connecting(the_id)
-        print(language.video_tutorials)
         exit()
+        
+    if args.renew == True:
+        change_tor_circuit()
+
+print(language.video_tutorials)
