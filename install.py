@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
 from torngconf.theme import *
-from torghostng import geteuid, system, path, name, getoutput, sleep, argv, check_lang, choose_lang, try_again
-
+from time import sleep
+from os import geteuid, system, path, name
+from subprocess import getoutput
 
 def banner():
     print(the_banner)
@@ -195,13 +196,14 @@ def install_package(package):
 
 
 def pyinstaller():
-    try:    
+    try:
+        system('sudo pip2 uninstall pyinstaller')
+
         if path.isfile('/usr/bin/pyinstaller') == True:
             print(language.already_installed.format('PyInstaller'))
             
         else:
             print(language.installing.format('PyInstaller'))
-            system('sudo pip2 uninstall pyinstaller')
             system('sudo pip3 install pyinstaller')
             
             print(icon.success + language.done)
@@ -220,7 +222,6 @@ def pyinstaller():
     except KeyboardInterrupt:
         print()
         exit()
-
 
 packages = ['tor','macchanger','pip3']
 for package in packages:
