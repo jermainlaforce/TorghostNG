@@ -9,7 +9,7 @@ TorghostNG was tested on:
 * ...
 
 # What's new in TorghostNG 1.2
-* Fixed `update_commands` and others in [torghostng.py](https://github.com/gitkern3l/TorghostNG/blob/master/torghostng.py)
+* Fixed `update_commands` and others in [`torghostng.py`](https://github.com/gitkern3l/TorghostNG/blob/master/torghostng.py)
 * Changed a few things in [`theme.py`](https://github.com/gitkern3l/TorghostNG/blob/master/torngconf/theme.py)
 * Changed a few things in [`install.py`](https://github.com/gitkern3l/TorghostNG/blob/master/install.py)
 * Now you can change Tor circuit with `-r`
