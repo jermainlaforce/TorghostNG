@@ -119,7 +119,8 @@ iptables -X"""
 
 update_commands = """cd ~ && rm -rf TorghostNG
 git clone https://github.com/gitkern3l/TorghostNG
-cd TorghostNG && sudo python3 install.py"""
+cd TorghostNG
+sudo python3 install.py && sudo python3 install.py"""
 
 def banner():
     print(the_banner)
