@@ -117,8 +117,8 @@ iptables -t mangle -F
 iptables -F
 iptables -X"""
 
-update_commands = """cd ~
-sudo git clone https://github.com/gitkern3l/TorghostNG
+update_commands = """cd ~ && rm -rf TorghostNG
+git clone https://github.com/gitkern3l/TorghostNG
 cd TorghostNG && sudo python3 install.py"""
 
 def banner():
