@@ -225,8 +225,7 @@ def check_lang():
         lang = choose_lang()
         return lang
     except FileNotFoundError:
-        print("TorghostNG is lacking its needed files. Reinstall TorghostNG pls")
-        exit()
+       choose_lang()
 
 
 def choose_lang(language=English):
