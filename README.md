@@ -40,22 +40,19 @@ To install TorghostNG, open your Terminal and enter these commands
 But with Slackware, you use `sudo python3 torghostng.py` to run TorghostNG :v
 
 # Help
-    TorghostNG 1.0 - Make all your internet traffic anonymized through TOR proxy
-    Rewritten from TorGhost with Python 3
-    usage: torghostng [-h] -s|-x|-id|-m|-c|-l|--list
-    
     OPTIONS:
-    -h, --help      Show this help message and exit
-    -s, --start     Start connecting to TOR
-    -x, --stop      Stop connecting to TOR
-    -id COUNTRY ID  Connect to TOR exit node of a specific country. Go to CountryCode.org to search country ID
-    -mac INTERFACE  Randomly change MAC address. Use 'ifconfig' to show interface devices
-    -c, --checkip   Check your current IP address
-    --nodelay       Disable delay time
-    -l, --language  Change the display language. English is the default
-    --list          Show the available languages list
-    -u, --update    Check for update
-    --dns           Use this to fix DNS when website address can't be resolved
+      -h, --help      Show this help message and exit
+      -s, --start     Start connecting to Tor
+      -x, --stop      Stop connecting to Tor
+      -r, --renew     Renew the current Tor circuit
+      -id COUNTRY ID  Connect to Tor exit node of a specific country. Go to CountryCode.org to search country ID
+      -mac INTERFACE  Randomly change MAC address. Use 'ifconfig' to show interface devices
+      -c, --checkip   Check your current IPv4 address
+      --dns           Use this to fix DNS when website address can't be resolved
+      -l, --language  Change the display language. English is the default
+      --list          Show the available languages list
+      -u, --update    Check for update
+      --nodelay       Disable delay time
 
 You can combine multiple choices at the same time, such as:
 * `torghostng -s -m INTERFACE`: Changing MAC address before connecting
