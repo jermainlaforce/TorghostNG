@@ -9,7 +9,7 @@ from torngconf.theme import *
 from os import geteuid, system, path, name
 
 SLEEP_TIME = 1.0
-VERSION = "1.2"
+VERSION = "1.1"
 
 
 def the_argparse(language=English):
@@ -163,8 +163,8 @@ def check_update():
 def check_tor(status):
     try:
         print(language.checking_tor, end='', flush=True)
-        tor_status = loads(getoutput("curl -s --max-time 60 https://check.torproject.org/api/ip"))
         sleep(SLEEP_TIME)
+        tor_status = loads(getoutput("curl -s --max-time 60 https://check.torproject.org/api/ip"))
         print(language.done)
         
         if tor_status['IsTor'] == False:
@@ -188,9 +188,9 @@ def check_tor(status):
 def check_ip():
     try:
         print(language.checking_ip, end='', flush=True)
+        sleep(SLEEP_TIME)
         ipv4_address = getoutput('curl -s --max-time 60 https://api.ipify.org')
         ipv6_address = getoutput('curl -s --max-time 60 https://api6.ipify.org')
-        sleep(SLEEP_TIME)
         print(language.done)
         
         print(language.your_ip.format('IPv4') + color.BOLD + ipv4_address + color.END)
@@ -384,7 +384,7 @@ def stop_connecting():
         
         print(language.restarting_network, end='', flush=True)
         system('systemctl restart --now NetworkManager')
-        sleep(7.5)
+        sleep(8)
         print(language.done)
         
         check_tor('stopped')
