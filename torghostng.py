@@ -9,7 +9,7 @@ from torngconf.theme import *
 from os import geteuid, system, path, name
 
 SLEEP_TIME = 1.0
-VERSION = "1.1"
+VERSION = "1.2"
 
 
 def the_argparse(language=English):
