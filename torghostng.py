@@ -2,15 +2,19 @@
 
 import argparse
 from time import sleep
-from json import loads
+from json import JSONDecodeError, loads
 from sys import argv, exit
 from subprocess import getoutput
-from torngconf.theme import *
 from os import geteuid, system, path, name
+
+try:
+    from torngconf.theme import *
+except ModuleNotFoundError:
+    print("TorghostNG is lacking its needed files. Reinstall TorghostNG pls")
+    exit()
 
 SLEEP_TIME = 1.0
 VERSION = "1.2"
-
 
 def the_argparse(language=English):
         parser = argparse.ArgumentParser(usage="torghostng [-h] -s|-x|-id|-r|-m|-c|-l|--list", add_help=False)
@@ -28,7 +32,6 @@ def the_argparse(language=English):
         parser.add_argument("-u", "--update", help=language.update_help, action="store_true")
         parser.add_argument("--nodelay", help=language.no_delay_help, action="store_true")
 
-
         if len(argv) == 1:
             banner()
             parser.print_help()
@@ -37,11 +40,10 @@ def the_argparse(language=English):
         return parser.parse_args()
 
 
-if path.isfile('/usr/bin/upgradepkg') == True:
+if (path.isfile('/usr/bin/upgradepkg') == True) or (path.isfile('/usr/bin/torngconf/langconf.txt') == False):
     LANGCONF = 'torngconf/langconf.txt'
 else:
     LANGCONF = '/usr/bin/torngconf/langconf.txt'
-
 
 if path.isfile('/usr/bin/apt') == True:
     TOR_USER = 'debian-tor'
@@ -149,7 +151,6 @@ def check_update():
             if choice[0].upper() == "Y":
                 print(language.updating.format(version))
                 system(update_commands)
-                print(language.uptodate)
                 exit()
                    
         else:
@@ -158,7 +159,6 @@ def check_update():
     except KeyboardInterrupt:
         print()
         exit()
-                
 
 def check_tor(status):
     try:
@@ -183,7 +183,11 @@ def check_tor(status):
     except KeyboardInterrupt:
         print()
         exit()
-            
+
+    except JSONDecodeError:
+        print()
+        sleep(1)
+        check_tor(status)
             
 def check_ip():
     try:
@@ -201,7 +205,6 @@ def check_ip():
     except KeyboardInterrupt:
         print()
         exit()
-
 
 def check_lang():
     try:
@@ -229,7 +232,6 @@ def check_lang():
     except FileNotFoundError:
         print("TorghostNG is lacking its needed files. Reinstall TorghostNG pls")
         exit()
-
 
 def choose_lang(language=English):
     try:
@@ -265,7 +267,6 @@ def choose_lang(language=English):
         print()
         exit()
 
-
 def start_connecting(id=None):
     try:
         print(icon.process + ' ' + language.start_help)
@@ -277,7 +278,7 @@ def start_connecting(id=None):
         else:
             print(language.disable_ipv6_info)
 
-            system('sudo cp /etc/sysctl.conf /etc/sysctl.conf.backup')
+            system('sudo cp {} /etc/sysctl.conf.backup'.format(Sysctl))
             print(language.disabling_ipv6, end='', flush=True)
             
             with open(Sysctl, mode='w') as file_sysctl:
@@ -311,11 +312,11 @@ def start_connecting(id=None):
             print(language.done)
 
 
-        if resolvConfig in open(resolv).read():
+        if resolvConfig == open(resolv).read():
             print(language.already_configured.format('DNS resolv.conf'))
             
         else:
-            system("cp /etc/resolv.conf /etc/resolv.conf.backup")
+            system("cp {} /etc/resolv.conf.backup".format(resolv))
 
             with open(resolv, mode='w') as file_resolv:
                 print(language.configuring.format('DNS resolv.conf'), end='', flush=True)
@@ -352,16 +353,14 @@ def start_connecting(id=None):
         print()
         exit()
 
-
 def stop_connecting():
     try:
         print(icon.process + ' ' + language.stop_help)
 
-
         if path.isfile('/etc/resolv.conf.backup') == True:
             print(language.restoring_configuration.format('DNS resolv.conf'), end='', flush=True)
 
-            system('mv /etc/resolv.conf.backup /etc/resolv.conf')
+            system('mv /etc/resolv.conf.backup {}'.format(resolv))
 
             sleep(SLEEP_TIME)
             print(language.done)
@@ -369,12 +368,11 @@ def stop_connecting():
         if path.isfile('/etc/sysctl.conf.backup') == True:
             print(language.restoring_configuration.format('IPv6'), end='', flush=True)
 
-            system('mv /etc/sysctl.conf.backup /etc/sysctl.conf')
+            system('mv /etc/sysctl.conf.backup {}'.format(Sysctl))
             system('sudo sysctl -p')
 
             sleep(SLEEP_TIME)
             print(language.done)
-
 
         print(language.flushing_iptables, end='', flush=True)
         system(IpFlush)
@@ -394,7 +392,6 @@ def stop_connecting():
     except KeyboardInterrupt:
         print()
         exit()
-
 
 def change_tor_circuit():
     try:
@@ -416,20 +413,18 @@ def change_tor_circuit():
         print()
         exit()
 
-
 def changemac(interface):
     try:
-        print(language.changing_mac, end='', flush=True)
-        sleep(SLEEP_TIME)
+        print(language.changing_mac)
         
         i = getoutput('ifconfig {} down'.format(interface))
 
         if "ERROR" in i:
             print(language.interface_error.format(interface))
         else:
-            print(language.done)
             system('macchanger -r {}'.format(interface))
             system('ifconfig {} up'.format(interface))
+            sleep(SLEEP_TIME)
             print(language.mac_changed)
             
         print(language.ifconfig_tip)
@@ -437,7 +432,6 @@ def changemac(interface):
     except KeyboardInterrupt:
         print()
         exit()
-
 
 def fix_dns():
     try:
@@ -456,35 +450,26 @@ def fix_dns():
 
 if __name__ == "__main__":
     language = check_lang()
-    
     check_windows_check_root()
-    
     args = the_argparse(language)
 
     banner()
     print()
     
-    if args.nodelay == True:
-        SLEEP_TIME = 0
+    if args.nodelay == True: SLEEP_TIME = 0
 
-    if args.list == True:
-        print(language.language_list)
+    if args.list == True: print(language.language_list)
 
-    if args.language == True:
-        language = choose_lang(language)
+    if args.language == True: language = choose_lang(language)
         
-    if args.update == True:
-        check_update()
+    if args.update == True: check_update()
 
-    if args.dns == True:
-        fix_dns()
+    if args.dns == True: fix_dns()
         
-    if args.checkip == True:
-        check_tor('stopped')
+    if args.checkip == True: check_tor('stopped')
         
     your_interface = args.mac
-    if your_interface != None:
-        changemac(your_interface)
+    if your_interface != None: changemac(your_interface)
 
     if args.start == True:
         start_connecting()
@@ -499,7 +484,6 @@ if __name__ == "__main__":
         start_connecting(the_id)
         exit()
         
-    if args.renew == True:
-        change_tor_circuit()
+    if args.renew == True: change_tor_circuit()
 
 print(language.video_tutorials)
