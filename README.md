@@ -24,8 +24,6 @@ TorghostNG currently supports:
 * GNU/Linux distros that based on Debian/Ubuntu
 * GNU/Linux distros that based on Fedora, CentOS, RHEL, openSUSE
 * [Solus OS](https://getsol.us)
-* [Alpine Linux](https://alpinelinux.org)
-* [OpenWrt Linux](https://openwrt.org)
 * [Void Linux](https://voidlinux.org)
 * Anh the elder guy: [Slackware](http://slackware.com)
 * (Too much package managers for one day :v)
