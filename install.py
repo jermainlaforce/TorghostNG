@@ -5,6 +5,7 @@ from time import sleep
 from os import geteuid, system, path, name
 from subprocess import getoutput
 
+
 def banner():
     print(the_banner)
     print(language.description)
@@ -18,67 +19,64 @@ def check_windows_check_root():
     if geteuid() != 0:
         print(language.root_please)
         exit()
-        
+
+
 def check_lang():
     try:
         if path.isfile('torngconf/langconf.txt') == True:
             with open('torngconf/langconf.txt') as file_lang:
-                lang = eval(file_lang.readline())
+                language = eval(file_lang.readline())
 
                 file_lang.close()
 
-                print(lang.applying_language, end='', flush=True)
-                print(lang.done)
+                print(language.applying_language, end='', flush=True)
+                print(language.done)
 
-                return lang
+                return language
         else:
-            lang = choose_lang()
-            return lang
+            language = choose_lang()
+            return language
         
     except KeyboardInterrupt:
         print()
         exit()
-    except (NameError, SyntaxError):
-        lang = choose_lang()
-        return lang
+    except (NameError, SyntaxError, AttributeError):
+        language = choose_lang()
+        return language
     except FileNotFoundError:
-        print("TorghostNG is lacking its needed files. Reinstall TorghostNG pls")
+        print("TorghostNG is lacking its needed files. Reinstall TorghostNG from Github pls")
         exit()
 
 
 def choose_lang(language=English):
     try:
-        with open('torngconf/langconf.txt', mode="w") as file_lang:
-            file_lang.truncate(0)
-            
+        with open('torngconf/langconf.txt', mode="w") as file_lang:            
             print(language.language_list)
             choice = int(input(language.choose_your_lang))
             
             if choice == 1:
-                print(English.applying_language, end='', flush=True)
+                print(English.applying_language)
                 file_lang.write("English")
-                
-                print(English.done)
-                print(English.current_language + "English")
-                return English
+                language = English
+    
             
-            if choice == 2:
-                print(Vietnamese.applying_language, end='', flush=True)
+            elif choice == 2:
+                print(Vietnamese.applying_language)
                 file_lang.write("Vietnamese")
-                
-                print(Vietnamese.done)
-                print(Vietnamese.current_language + "Vietnamese")
-                return Vietnamese
+                language = Vietnamese
 
             else:
+                print()
                 print(language.invalid_choice)
                 choose_lang()
 
             file_lang.close()
+            return language
 
     except KeyboardInterrupt:
         print()
         exit()
+
 
 def uninstall():
     try:
@@ -86,16 +84,15 @@ def uninstall():
         
         if choice[0].upper() == "Y":
             print(language.uninstalling)
-            system('sudo rm -rf /usr/bin/torngconf')
-            system('sudo rm /usr/bin/torghostng')
+            system('rm -rf /usr/bin/torngconf')
+            system('rm /usr/bin/torghostng')
             print(language.uninstalled)
-            exit()
             
         else:
-            print(language.torghostng_tip.format('sudo torghostng') + color.END)
-            exit()
+            print(language.torghostng_tip.format('torghostng') + color.END)
             
         print(language.video_tutorials)
+        exit()
             
     except KeyboardInterrupt:
         print()
@@ -111,43 +108,29 @@ if path.isfile('/usr/bin/torghostng') == True:
     print(language.already_installed.format('TorghostNG'))
     uninstall()
 
-
 if path.isfile('/usr/bin/pacman') == True:
-    INSTALL_PACKAGES = "sudo pacman -S "
+    INSTALL_PACKAGES = "pacman -S "
         
 elif path.isfile('/usr/bin/apt') == True:
-    INSTALL_PACKAGES = "sudo apt install "
+    INSTALL_PACKAGES = "apt install "
     
-elif path.isfile('/usr/bin/eopkg') == True:
-    INSTALL_PACKAGES = "sudo eopkg install "
-        
 elif path.isfile('/usr/bin/dnf') == True:
-    INSTALL_PACKAGES = "sudo dnf install "
+    INSTALL_PACKAGES = "dnf install "
         
 elif path.isfile('/usr/bin/yum') == True:
-    INSTALL_PACKAGES = "sudo yum install "
+    INSTALL_PACKAGES = "yum install "
         
 elif path.isfile('/usr/bin/zypper') == True:
-    INSTALL_PACKAGES = "sudo zypper install "
-        
-elif path.isfile('/usr/bin/apk') == True:
-    INSTALL_PACKAGES = "sudo apk add --upgrade "
-        
-elif path.isfile('/usr/bin/opkg') == True:
-    INSTALL_PACKAGES = "sudo opkg install "
+    INSTALL_PACKAGES = "zypper install "
         
 elif path.isfile('/usr/bin/xbps-install') == True:
-    INSTALL_PACKAGES = "sudo xbps-install -S "
+    INSTALL_PACKAGES = "xbps-install -S "
         
 elif path.isfile('/usr/bin/upgradepkg') == True:
-    UPDATE_REPOSITORY = "wget https://slack.conraid.net/repository/slackware64-current/{}"
-    INSTALL_PACKAGES = "sudo upgradepkg --install-new "
+    UPDATE_REPOSITORY = "wget https://slack.conraid.net/repository/slackware64-current"
+    INSTALL_PACKAGES = "upgradepkg --install-new "
 
-elif (path.isfile('/usr/bin/pkg') == True) or (path.isfile('/usr/bin/pkg_add') == True):
-    print(language.sorry_bsd)
-    exit()
-
-elif path.isfile('/usr/bin/swupd') == True:
+else:
     print(language.sorry_some_os)
     exit()
 
@@ -164,11 +147,11 @@ def install_package(package):
                 print(language.downloading.format(package))
 
                 if package == 'tor':
-                    system(UPDATE_REPOSITORY.format('tor/tor-0.4.2.7-x86_64-1cf.txz'))
+                    system(UPDATE_REPOSITORY + 'tor/tor-0.4.2.7-x86_64-1cf.txz')
                     system(INSTALL_PACKAGES + 'tor-0.4.2.7-x86_64-1cf.txz')
                     
                 elif package == 'macchanger':
-                    system(UPDATE_REPOSITORY.format('macchanger/macchanger-1.7.0-x86_64-5cf.txz'))
+                    system(UPDATE_REPOSITORY + 'macchanger/macchanger-1.7.0-x86_64-5cf.txz')
                     system(INSTALL_PACKAGES + 'macchanger-1.7.0-x86_64-5cf.txz')
                     
                 elif package == 'pip3':
@@ -178,6 +161,9 @@ def install_package(package):
             else:
                 if package == 'pip3':
                     package = 'python3-pip'
+                    
+                    if path.isfile('/usr/bin/pacman') == True:
+                        package = 'python-pip'
 
                 system(INSTALL_PACKAGES + package)
 
@@ -186,7 +172,7 @@ def install_package(package):
             print(language.installed.format(package))
             
             if path.isfile('/usr/bin/upgradepkg') == True:
-                print(language.torghostng_tip.format('sudo python3 torghostng.py'))
+                print(language.torghostng_tip.format('python3 torghostng.py'))
                 print(language.video_tutorials)
                 exit()
             
@@ -197,35 +183,35 @@ def install_package(package):
 
 def pyinstaller():
     try:
-        system('sudo pip2 uninstall pyinstaller')
+        system('pip2 uninstall pyinstaller')
 
         if path.isfile('/usr/bin/pyinstaller') == True:
             print(language.already_installed.format('PyInstaller'))
             
         else:
             print(language.installing.format('PyInstaller'))
-            system('sudo pip3 install pyinstaller')
+            system('pip3 install pyinstaller')
             
             print(icon.success + language.done)
             print(language.installed.format('PyInstaller'))
             
         print(language.installing.format('TorghostNG'))
         system('pyinstaller --onefile torghostng.py')
-        system('sudo cp -r dist/torghostng /usr/bin')
-        system('sudo cp -r torngconf /usr/bin')
+        system('cp -r dist/torghostng /usr/bin && cp -r torngconf /usr/bin')
         system('chmod +x /usr/bin/torghostng')
         
         print(icon.success + language.done)
-        print(language.torghostng_tip.format('sudo torghostng') + color.END)
-        print(language.video_tutorials)
+        print(language.torghostng_tip.format('torghostng') + color.END)
         
     except KeyboardInterrupt:
         print()
         exit()
+
 
 packages = ['tor','macchanger','pip3']
 for package in packages:
     install_package(package)
 
 pyinstaller()
+print(language.video_tutorials)
 exit()
